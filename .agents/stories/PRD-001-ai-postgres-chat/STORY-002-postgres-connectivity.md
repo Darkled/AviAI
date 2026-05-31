@@ -7,12 +7,12 @@ type: technical
 priority: high
 complexity: small
 phase: 1
-status: todo
+status: done
 labels: [backend, postgres]
 epic_branch: epic/PRD-001-ai-postgres-chat
-plan: null
-report: null
-commit: null
+plan: .agents/plans/PRD-001-ai-postgres-chat/completed/STORY-002-postgres-connectivity.plan.md
+report: .agents/reports/PRD-001-ai-postgres-chat/STORY-002-postgres-connectivity.report.md
+commit: 45df6b9
 depends_on: [STORY-001]
 blocks: [STORY-004]
 skills: [fastapi-python]

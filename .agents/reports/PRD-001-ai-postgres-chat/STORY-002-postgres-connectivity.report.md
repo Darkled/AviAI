@@ -3,16 +3,16 @@ story: STORY-002
 prd: PRD-001
 plan: .agents/plans/PRD-001-ai-postgres-chat/completed/STORY-002-postgres-connectivity.plan.md
 epic_branch: epic/PRD-001-ai-postgres-chat
-commit: TBD
+commit: 45df6b9
 status: COMPLETE
 completed: 2026-05-31
 ---
 
 # Implementation Report — STORY-002: PostgreSQL Connectivity & Schema Service
 
-**Plan**: `.agents/plans/PRD-001-ai-postgres-chat/STORY-002-postgres-connectivity.plan.md`
+**Plan**: `.agents/plans/PRD-001-ai-postgres-chat/completed/STORY-002-postgres-connectivity.plan.md`
 **Epic Branch**: `epic/PRD-001-ai-postgres-chat`
-**Commit**: TBD
+**Commit**: `45df6b9`
 
 ## Summary
 
