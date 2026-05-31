@@ -3,7 +3,7 @@ story: STORY-001
 prd: PRD-001
 plan: .agents/plans/PRD-001-ai-postgres-chat/completed/STORY-001-backend-foundation.plan.md
 epic_branch: epic/PRD-001-ai-postgres-chat
-commit: TBD
+commit: 33208f9
 status: COMPLETE
 completed: 2026-05-31
 ---
@@ -12,7 +12,7 @@ completed: 2026-05-31
 
 **Plan**: `.agents/plans/PRD-001-ai-postgres-chat/STORY-001-backend-foundation.plan.md`
 **Epic Branch**: `epic/PRD-001-ai-postgres-chat`
-**Commit**: TBD
+**Commit**: `33208f9`
 
 ## Summary
 

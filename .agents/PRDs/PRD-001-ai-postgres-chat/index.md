@@ -6,7 +6,7 @@
 
 ## Progress
 
-0/6 stories done — 0%
+1/6 stories done — 16%
 
 ## Stories
 
@@ -14,7 +14,7 @@ All stories commit on the epic branch `epic/PRD-001-ai-postgres-chat`. No per-st
 
 | ID | Title | Type | Status | Complexity | Plan | Commit |
 |----|-------|------|--------|------------|------|--------|
-| STORY-001 | Backend Foundation & API Skeleton | technical | 🟡 in-progress | small | [plan](../../plans/PRD-001-ai-postgres-chat/STORY-001-backend-foundation.plan.md) | — |
+| STORY-001 | Backend Foundation & API Skeleton | technical | ✅ done | small | [plan](../../plans/PRD-001-ai-postgres-chat/completed/STORY-001-backend-foundation.plan.md) | `33208f9` |
 | STORY-002 | PostgreSQL Connectivity & Schema Service | technical | ⬜ todo | small | — | — |
 | STORY-003 | Frontend Foundation & Layout | technical | ⬜ todo | small | — | — |
 | STORY-004 | Pydantic AI Agent Implementation | feature | ⬜ todo | medium | — | — |
