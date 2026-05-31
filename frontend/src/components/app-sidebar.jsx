@@ -13,18 +13,23 @@ import {
 } from "@/components/ui/sidebar"
 import { Button } from "@/components/ui/button"
 
-export function AppSidebar() {
+export function AppSidebar({ onNewChat }) {
   // Mock chat history
   const history = [
-    { id: 1, title: "Chat about React" },
-    { id: 2, title: "FastAPI Backend ideas" },
-    { id: 3, title: "Modern CSS techniques" },
+    { id: 1, title: "Fleet Capacity Analysis" },
+    { id: 2, title: "Fuel Efficiency Comparison" },
+    { id: 3, title: "Maintenance Status Report" },
+    { id: 4, title: "Boeing 787 Performance" },
   ]
 
   return (
-    <Sidebar variant="sidebar" collapsible="icon">
+    <Sidebar variant="sidebar" collapsible="none" className="border-r">
       <SidebarHeader className="p-4">
-        <Button className="w-full justify-start gap-2" variant="outline">
+        <Button 
+          className="w-full justify-start gap-2" 
+          variant="outline"
+          onClick={onNewChat}
+        >
           <Plus className="h-4 w-4" />
           <span>New Chat</span>
         </Button>

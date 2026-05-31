@@ -5,9 +5,8 @@ import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { Card } from "@/components/ui/card"
 
-export default function Home() {
+export default function Home({ messages, setMessages }) {
   const [input, setInput] = useState("")
-  const [messages, setMessages] = useState([])
   const textareaRef = useRef(null)
   const scrollAreaRef = useRef(null)
 
@@ -49,14 +48,19 @@ export default function Home() {
               <Sparkles className="h-10 w-10 text-primary" />
             </div>
             <div className="space-y-2">
-              <h2 className="text-3xl font-bold tracking-tight">Welcome to AI Chat</h2>
+              <h2 className="text-3xl font-bold tracking-tight">Airline Management AI</h2>
               <p className="text-muted-foreground max-w-[420px]">
-                Start a conversation to see how I can help you with your tasks, 
-                answer your questions, or just chat.
+                Welcome! I can help you analyze your aircraft fleet, compare technical specs, 
+                and manage your airline's operational data.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 w-full max-w-lg mt-8">
-              {["Explain quantum physics", "Write a poem about rain", "How to make a pizza?", "Refactor this code"].map((suggestion) => (
+              {[
+                "Highest passenger capacity?",
+                "Boeing vs Airbus fuel burn",
+                "Fleet status summary",
+                "Aircraft with range > 5000km"
+              ].map((suggestion) => (
                 <Button 
                   key={suggestion} 
                   variant="outline" 

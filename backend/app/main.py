@@ -4,7 +4,6 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import Base, engine
 from app.core.middleware import LoggingMiddleware
-from app.routers import pais as pais_router
 
 Base.metadata.create_all(bind=engine)
 
@@ -23,8 +22,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-app.include_router(pais_router.router, prefix="/api/v1")
 
 
 @app.get("/health")
