@@ -4,11 +4,12 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.core.config import settings
 from app.core.database import Base, engine
 from app.core.middleware import LoggingMiddleware
+from app.routers import health
 
-Base.metadata.create_all(bind=engine)
+# Base.metadata.create_all(bind=engine)
 
 app = FastAPI(
-    title=settings.app_name,
+    title="AI PostgreSQL Chat API",
     version=settings.app_version,
     debug=settings.debug,
 )
@@ -23,7 +24,4 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
-@app.get("/health")
-def health():
-    return {"status": "ok", "version": settings.app_version}
+app.include_router(health.router, prefix="/api", tags=["health"])

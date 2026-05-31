@@ -9,6 +9,9 @@ class Settings(BaseSettings):
     database_url: str = "sqlite:///./app.db"
     allowed_origins: str = "http://localhost:3000"
     log_level: str = "INFO"
+    openrouter_api_key: str | None = None
+    openrouter_model: str = "anthropic/claude-3.5-sonnet"
+    logfire_token: str | None = None
 
     @field_validator("allowed_origins", mode="before")
     @classmethod
