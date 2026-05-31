@@ -6,7 +6,8 @@ class Settings(BaseSettings):
     app_name: str = "FastAPI Template"
     app_version: str = "0.1.0"
     debug: bool = False
-    database_url: str = "sqlite:///./app.db"
+    database_url: str = "sqlite+aiosqlite:///./sessions.db"
+    data_database_url: str = "postgresql+asyncpg://user:password@localhost:5432/dbname"
     allowed_origins: str = "http://localhost:3000"
     log_level: str = "INFO"
     openrouter_api_key: str | None = None
