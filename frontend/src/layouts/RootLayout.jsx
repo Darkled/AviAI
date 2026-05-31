@@ -1,20 +1,29 @@
-import { Outlet, NavLink } from "react-router"
+import { Outlet } from "react-router"
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
+import { AppSidebar } from "@/components/app-sidebar"
+import { ThemeToggle } from "@/components/theme-toggle"
+import { TooltipProvider } from "@/components/ui/tooltip"
 
 export default function RootLayout() {
   return (
-    <div className="min-h-screen flex flex-col">
-      <header>
-        <nav>
-          <NavLink to="/" end className={({ isActive }) => isActive ? "active" : ""}>Home</NavLink>
-          {" | "}
-          <NavLink to="/about" className={({ isActive }) => isActive ? "active" : ""}>About</NavLink>
-          {" | "}
-          <NavLink to="/dashboard" className={({ isActive }) => isActive ? "active" : ""}>Dashboard</NavLink>
-        </nav>
-      </header>
-      <main className="flex-1">
-        <Outlet />
-      </main>
-    </div>
+    <TooltipProvider>
+      <SidebarProvider>
+        <div className="flex min-h-screen w-full bg-background">
+          <AppSidebar />
+          <SidebarInset className="flex flex-col">
+            <header className="flex h-14 items-center justify-between border-b px-4 lg:px-6 shrink-0">
+              <div className="flex items-center gap-2">
+                <SidebarTrigger />
+                <h1 className="text-lg font-semibold tracking-tight">AI Chat</h1>
+              </div>
+              <ThemeToggle />
+            </header>
+            <main className="flex-1 overflow-hidden">
+              <Outlet />
+            </main>
+          </SidebarInset>
+        </div>
+      </SidebarProvider>
+    </TooltipProvider>
   )
 }
