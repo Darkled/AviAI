@@ -93,7 +93,7 @@ export default function Home() {
       </ScrollArea>
 
       <div className="py-6 shrink-0">
-        <div className="relative flex items-end gap-2 bg-muted/30 p-2 rounded-2xl border border-border focus-within:border-primary/50 transition-colors">
+        <div className="relative flex items-end gap-2 bg-background p-2 rounded-2xl border border-border focus-within:border-primary/50 transition-colors">
           <Textarea
             ref={textareaRef}
             tabIndex={0}
@@ -102,11 +102,11 @@ export default function Home() {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Send a message..."
-            className="min-h-[44px] max-h-[200px] w-full resize-none bg-transparent border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-3 py-3"
+            className="min-h-[44px] max-h-[200px] w-full resize-none bg-background border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-3 py-3"
           />
           <Button 
             size="icon" 
-            className="rounded-xl h-10 w-10 shrink-0" 
+            className="rounded-xl h-11 w-11 shrink-0" 
             disabled={!input.trim()}
             onClick={handleSend}
           >
