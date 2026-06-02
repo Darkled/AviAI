@@ -7,17 +7,17 @@ type: technical
 priority: high
 complexity: small
 phase: 1
-status: todo
+status: done
 labels: [frontend, react, shadcn]
 epic_branch: epic/PRD-001-ai-postgres-chat
-plan: null
+plan: .agents/plans/story-003-frontend-foundation.md
 report: null
 commit: null
 depends_on: [STORY-001]
 blocks: [STORY-005]
 skills: [react-router-declarative-mode, shadcn, vercel-react-best-practices]
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-02
 ---
 
 # STORY-003: Frontend Foundation & Layout
@@ -28,9 +28,9 @@ As a user, I want a modern and responsive base layout for the application, so th
 
 ## Acceptance Criteria
 
-- [ ] Given the frontend is running, when I visit the root URL, then I see the main layout with a sidebar and a page header.
-- [ ] Given a mobile device, when I view the app, then the layout adjusts responsively (e.g., sidebar collapses).
-- [ ] Given the navigation, when I click on links, then the URL updates correctly using React Router.
+- [x] Given the frontend is running, when I visit the root URL, then I see the main layout with a sidebar and a page header.
+- [x] Given a mobile device, when I view the app, then the layout adjusts responsively (e.g., sidebar collapses).
+- [x] Given the navigation, when I click on links, then the URL updates correctly using React Router.
 
 ## Technical Notes
 

@@ -1,8 +1,9 @@
 import { Outlet } from "react-router"
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar"
+import { SidebarProvider, SidebarInset, SidebarTrigger } from "@/components/ui/sidebar"
 import { AppSidebar } from "@/components/app-sidebar"
 import { ThemeToggle } from "@/components/theme-toggle"
 import { TooltipProvider } from "@/components/ui/tooltip"
+import { Separator } from "@/components/ui/separator"
 
 export default function RootLayout({ onNewChat }) {
   return (
@@ -13,6 +14,8 @@ export default function RootLayout({ onNewChat }) {
           <SidebarInset className="flex flex-col">
             <header className="flex h-14 items-center justify-between border-b px-4 lg:px-6 shrink-0">
               <div className="flex items-center gap-2">
+                <SidebarTrigger />
+                <Separator orientation="vertical" className="mr-2 h-4" />
                 <h1 className="text-lg font-semibold tracking-tight">AviAI</h1>
               </div>
               <ThemeToggle />
