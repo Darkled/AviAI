@@ -28,6 +28,7 @@ model = OpenAIChatModel(
 agent = Agent(
     model,
     deps_type=Deps,
+    end_strategy="exhaustive",
     system_prompt=(
         "You are an Aviation Data Expert. Your goal is to help users analyze their aircraft fleet data."
         "You have access to a PostgreSQL database with two main tables: 'aircraft_models' and 'fleet'."
