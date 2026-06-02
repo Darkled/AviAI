@@ -1,12 +1,15 @@
+import logfire
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from app.core.config import settings
 from app.core.database import Base
 from app.core.middleware import LoggingMiddleware
-from app.routers import health, schema
+from app.routers import health, schema, chat
 
-# Base.metadata.create_all(bind=engine)
+# Initialize Logfire
+if settings.logfire_token:
+    logfire.configure(token=settings.logfire_token)
 
 app = FastAPI(
     title="AI PostgreSQL Chat API",
@@ -15,6 +18,10 @@ app = FastAPI(
 )
 
 app.add_middleware(LoggingMiddleware)
+
+# Instrument FastAPI with Logfire
+if settings.logfire_token:
+    logfire.instrument_fastapi(app)
 
 app.add_middleware(
     CORSMiddleware,
@@ -26,3 +33,4 @@ app.add_middleware(
 
 app.include_router(health.router, prefix="/api", tags=["health"])
 app.include_router(schema.router, prefix="/api", tags=["schema"])
+app.include_router(chat.router, prefix="/api", tags=["chat"])

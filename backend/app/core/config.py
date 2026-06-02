@@ -11,7 +11,7 @@ class Settings(BaseSettings):
     allowed_origins: str = "http://localhost:3000"
     log_level: str = "INFO"
     openrouter_api_key: str | None = None
-    openrouter_model: str = "anthropic/claude-3.5-sonnet"
+    openrouter_model: str = "poolside/laguna-m.1:free"
     logfire_token: str | None = None
 
     @field_validator("allowed_origins", mode="before")

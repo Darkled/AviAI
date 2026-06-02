@@ -1,5 +1,7 @@
 import { useState, useRef, useEffect } from "react"
 import { SendHorizontal, Sparkles } from "lucide-react"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 import { Button } from "@/components/ui/button"
 import { Textarea } from "@/components/ui/textarea"
 import { ScrollArea } from "@/components/ui/scroll-area"
@@ -7,8 +9,10 @@ import { Card } from "@/components/ui/card"
 
 export default function Home({ messages, setMessages }) {
   const [input, setInput] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
   const textareaRef = useRef(null)
   const scrollAreaRef = useRef(null)
+  const scrollViewportRef = useRef(null)
 
   // Auto-expand textarea
   useEffect(() => {
@@ -19,17 +23,70 @@ export default function Home({ messages, setMessages }) {
     }
   }, [input])
 
-  const handleSend = () => {
-    if (!input.trim()) return
-    setMessages([...messages, { role: "user", content: input }])
+  // Auto-scroll to bottom
+  useEffect(() => {
+    const viewport = scrollAreaRef.current?.querySelector('[data-radix-scroll-area-viewport]')
+    if (viewport) {
+      viewport.scrollTop = viewport.scrollHeight
+    }
+  }, [messages])
+
+  const handleSend = async () => {
+    if (!input.trim() || isLoading) return
+
+    const userMessage = { role: "user", content: input }
+    const initialMessages = [...messages, userMessage]
+    setMessages(initialMessages)
     setInput("")
-    // Mock response
-    setTimeout(() => {
-      setMessages(prev => [...prev, { 
-        role: "assistant", 
-        content: "I'm a placeholder AI response. How can I help you today?" 
-      }])
-    }, 1000)
+    setIsLoading(true)
+
+    // Add a placeholder for the assistant response
+    const assistantMessageIndex = initialMessages.length
+    setMessages(prev => [...prev, { role: "assistant", content: "" }])
+
+    try {
+      const response = await fetch("http://localhost:8000/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: input }),
+      })
+
+      if (!response.ok) throw new Error("Failed to connect to AI")
+
+      const reader = response.body.getReader()
+      const decoder = new TextDecoder()
+      let assistantContent = ""
+
+      while (true) {
+        const { done, value } = await reader.read()
+        if (done) break
+
+        const chunk = decoder.decode(value, { stream: true })
+        assistantContent += chunk
+
+        // Update the assistant message in the state
+        setMessages(prev => {
+          const newMessages = [...prev]
+          newMessages[assistantMessageIndex] = {
+            ...newMessages[assistantMessageIndex],
+            content: assistantContent,
+          }
+          return newMessages
+        })
+      }
+    } catch (error) {
+      console.error("Streaming error:", error)
+      setMessages(prev => {
+        const newMessages = [...prev]
+        newMessages[assistantMessageIndex] = {
+          ...newMessages[assistantMessageIndex],
+          content: "Sorry, I encountered an error. Please try again later.",
+        }
+        return newMessages
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleKeyDown = (e) => {
@@ -81,17 +138,47 @@ export default function Home({ messages, setMessages }) {
                   message.role === "user" ? "justify-end" : "justify-start"
                 }`}
               >
-                <Card className={`max-w-[80%] px-4 py-3 rounded-2xl shadow-none ${
+                <Card className={`max-w-[85%] px-4 py-3 rounded-2xl shadow-none ${
                   message.role === "user" 
                     ? "bg-primary text-primary-foreground border-transparent" 
                     : "bg-muted/50 border-border"
                 }`}>
-                  <p className="whitespace-pre-wrap leading-relaxed">
-                    {message.content}
-                  </p>
+                  <div className="prose prose-sm dark:prose-invert max-w-none">
+                    {message.role === "assistant" ? (
+                      <ReactMarkdown 
+                        remarkPlugins={[remarkGfm]}
+                        components={{
+                          table: ({node, ...props}) => (
+                            <div className="overflow-x-auto my-4 border rounded-lg">
+                              <table className="min-w-full divide-y divide-border" {...props} />
+                            </div>
+                          ),
+                          th: ({node, ...props}) => (
+                            <th className="px-4 py-2 bg-muted font-semibold text-left" {...props} />
+                          ),
+                          td: ({node, ...props}) => (
+                            <td className="px-4 py-2 border-t border-border" {...props} />
+                          )
+                        }}
+                      >
+                        {message.content}
+                      </ReactMarkdown>
+                    ) : (
+                      <p className="whitespace-pre-wrap leading-relaxed">
+                        {message.content}
+                      </p>
+                    )}
+                  </div>
                 </Card>
               </div>
             ))}
+            {isLoading && !messages[messages.length - 1]?.content && (
+              <div className="flex justify-start">
+                <Card className="max-w-[85%] px-4 py-3 rounded-2xl shadow-none bg-muted/50 border-border italic text-muted-foreground animate-pulse">
+                  Thinking...
+                </Card>
+              </div>
+            )}
           </div>
         )}
       </ScrollArea>
@@ -106,12 +193,13 @@ export default function Home({ messages, setMessages }) {
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Send a message..."
+            disabled={isLoading}
             className="min-h-[44px] max-h-[200px] w-full resize-none bg-background border-0 focus-visible:ring-0 focus-visible:ring-offset-0 px-3 py-3"
           />
           <Button 
             size="icon" 
             className="rounded-xl h-11 w-11 shrink-0" 
-            disabled={!input.trim()}
+            disabled={!input.trim() || isLoading}
             onClick={handleSend}
           >
             <SendHorizontal className="h-5 w-5" />

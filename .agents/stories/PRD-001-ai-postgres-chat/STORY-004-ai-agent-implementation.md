@@ -7,17 +7,17 @@ type: feature
 priority: high
 complexity: medium
 phase: 2
-status: todo
+status: done
 labels: [backend, ai, pydantic-ai]
 epic_branch: epic/PRD-001-ai-postgres-chat
-plan: null
+plan: .agents/plans/story-004-ai-agent-implementation.md
 report: null
 commit: null
 depends_on: [STORY-002]
 blocks: [STORY-005, STORY-006]
 skills: [building-pydantic-ai-agents]
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-02
 ---
 
 # STORY-004: Pydantic AI Agent Implementation
@@ -28,10 +28,10 @@ As a user, I want to ask questions in natural language, so that the AI agent can
 
 ## Acceptance Criteria
 
-- [ ] Given a natural language query, when the agent runs, then it correctly identifies the required SQL query.
-- [ ] Given a generated SQL query, when the agent executes it, then it returns the raw data from the database.
-- [ ] Given the data, when the agent responds, then it provides a human-readable explanation of the results.
-- [ ] Given an invalid or dangerous query (e.g., DELETE), when the agent is asked, then it refuses to execute and explains why.
+- [x] Given a natural language query, when the agent runs, then it correctly identifies the required SQL query.
+- [x] Given a generated SQL query, when the agent executes it, then it returns the raw data from the database.
+- [x] Given the data, when the agent responds, then it provides a human-readable explanation of the results.
+- [x] Given an invalid or dangerous query (e.g., DELETE), when the agent is asked, then it refuses to execute and explains why.
 
 ## Technical Notes
 
