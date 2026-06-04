@@ -21,7 +21,7 @@ async def _get_postgres_schema(db: AsyncSession) -> DatabaseSchema:
         "WHERE table_schema = 'public' AND table_type = 'BASE TABLE';"
     )
     result = await db.execute(tables_query)
-    table_names = [row[0] for row in result.fetchall()]
+    table_names = [row[0] for row in result.all()]
 
     tables = []
     for table_name in table_names:
@@ -40,7 +40,7 @@ async def _get_postgres_schema(db: AsyncSession) -> DatabaseSchema:
                 nullable=row[2] == "YES",
                 default=str(row[3]) if row[3] is not None else None,
             )
-            for row in col_result.fetchall()
+            for row in col_result.all()
         ]
         tables.append(TableSchema(name=table_name, columns=columns))
 
@@ -51,7 +51,7 @@ async def _get_sqlite_schema(db: AsyncSession) -> DatabaseSchema:
     # Get all tables
     tables_query = text("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';")
     result = await db.execute(tables_query)
-    table_names = [row[0] for row in result.fetchall()]
+    table_names = [row[0] for row in result.all()]
 
     tables = []
     for table_name in table_names:
@@ -66,7 +66,7 @@ async def _get_sqlite_schema(db: AsyncSession) -> DatabaseSchema:
                 nullable=not bool(row[3]),
                 default=str(row[4]) if row[4] is not None else None,
             )
-            for row in col_result.fetchall()
+            for row in col_result.all()
         ]
         tables.append(TableSchema(name=table_name, columns=columns))
 

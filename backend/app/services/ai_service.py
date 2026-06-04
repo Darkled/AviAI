@@ -1,4 +1,5 @@
 import re
+import httpx
 from dataclasses import dataclass
 from typing import Any
 
@@ -16,11 +17,16 @@ class Deps:
     db: AsyncSession
 
 # Initialize OpenRouter model (OpenRouter is OpenAI compatible)
+# We use a custom httpx client with a longer timeout (90s)
+# to handle slower models and multiple tool calls.
+http_client = httpx.AsyncClient(timeout=90.0)
+
 model = OpenAIChatModel(
     settings.openrouter_model,
     provider=OpenAIProvider(
         base_url="https://openrouter.ai/api/v1",
         api_key=settings.openrouter_api_key,
+        http_client=http_client,
     ),
 )
 
@@ -30,12 +36,13 @@ agent = Agent(
     deps_type=Deps,
     end_strategy="exhaustive",
     system_prompt=(
-        "You are an Aviation Data Expert. Your goal is to help users analyze their aircraft fleet data."
-        "You have access to a PostgreSQL database with two main tables: 'aircraft_models' and 'fleet'."
-        "Use the 'get_db_schema' tool to understand the available tables and columns."
-        "Always use the 'execute_sql' tool to query the database."
-        "IMPORTANT: You can only execute SELECT queries. Do not attempt to modify the database."
-        "After getting results, provide a clear, human-readable explanation of the data."
+        "You are an Aviation Data Expert. Your goal is to help users analyze their aircraft fleet data.\n"
+        "You have access to a PostgreSQL database with two main tables: 'aircraft_models' and 'fleet'.\n"
+        "1. Use the 'get_db_schema' tool to understand the available tables and columns if you are unsure.\n"
+        "2. Always use the 'execute_sql' tool to query the database.\n"
+        "3. IMPORTANT: You can only execute SELECT queries. Do not attempt to modify the database.\n"
+        "4. DO NOT provide conversational filler or explanations before calling a tool. Call the tool immediately.\n"
+        "5. After getting results, provide a clear, human-readable explanation of the data.\n"
         "If the user asks for something not related to aviation data or the database, politely decline."
     ),
 )
@@ -67,7 +74,7 @@ async def execute_sql(ctx: RunContext[Deps], query: str) -> str:
 
     try:
         result = await ctx.deps.db.execute(text(query))
-        rows = result.fetchall()
+        rows = result.all()
         if not rows:
             return "No results found."
         
