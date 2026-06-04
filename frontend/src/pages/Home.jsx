@@ -34,7 +34,16 @@ export default function Home({ messages, setMessages }) {
   const handleSend = async () => {
     if (!input.trim() || isLoading) return
 
-    const userMessage = { role: "user", content: input }
+    const cleanedInput = input
+      .split("\n")
+      .map((line) => line.trimEnd())
+      .filter((line) => line !== "")
+      .join("\n")
+      .trim()
+
+    if (!cleanedInput) return
+
+    const userMessage = { role: "user", content: cleanedInput }
     const initialMessages = [...messages, userMessage]
     setMessages(initialMessages)
     setInput("")
@@ -48,7 +57,7 @@ export default function Home({ messages, setMessages }) {
       const response = await fetch("http://localhost:8000/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: input }),
+        body: JSON.stringify({ message: cleanedInput }),
       })
 
       if (!response.ok) throw new Error("Failed to connect to AI")
