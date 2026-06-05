@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from "react"
+import { useParams, useNavigate } from "react-router"
 import { SendHorizontal, Sparkles } from "lucide-react"
 import ReactMarkdown from "react-markdown"
 import remarkGfm from "remark-gfm"
@@ -8,11 +9,35 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Card } from "@/components/ui/card"
 
 export default function Home({ messages, setMessages }) {
+  const { chatId } = useParams()
+  const navigate = useNavigate()
   const [input, setInput] = useState("")
   const [isLoading, setIsLoading] = useState(false)
   const textareaRef = useRef(null)
   const scrollAreaRef = useRef(null)
-  const scrollViewportRef = useRef(null)
+
+  // Load chat messages if chatId exists
+  useEffect(() => {
+    if (chatId) {
+      const fetchMessages = async () => {
+        try {
+          const response = await fetch(`http://localhost:8000/api/chats/${chatId}/messages`)
+          if (response.ok) {
+            const data = await response.json()
+            setMessages(data)
+          } else {
+            console.error("Failed to fetch messages")
+            navigate("/")
+          }
+        } catch (error) {
+          console.error("Error fetching messages:", error)
+        }
+      }
+      fetchMessages()
+    } else {
+      setMessages([])
+    }
+  }, [chatId, navigate, setMessages])
 
   // Auto-expand textarea
   useEffect(() => {
@@ -57,7 +82,10 @@ export default function Home({ messages, setMessages }) {
       const response = await fetch("http://localhost:8000/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: cleanedInput }),
+        body: JSON.stringify({ 
+          message: cleanedInput,
+          chat_id: chatId ? parseInt(chatId) : null
+        }),
       })
 
       if (!response.ok) throw new Error("Failed to connect to AI")
@@ -71,7 +99,24 @@ export default function Home({ messages, setMessages }) {
         if (done) break
 
         const chunk = decoder.decode(value, { stream: true })
-        assistantContent += chunk
+        
+        // Check for metadata at the end of the stream
+        if (chunk.includes("[METADATA]")) {
+          const parts = chunk.split("[METADATA]")
+          assistantContent += parts[0]
+          
+          try {
+            const metadata = JSON.parse(parts[1])
+            if (!chatId && metadata.chat_id) {
+              // Redirect to the new chat URL without clearing messages
+              navigate(`/chat/${metadata.chat_id}`, { replace: true })
+            }
+          } catch (e) {
+            console.error("Failed to parse metadata:", e)
+          }
+        } else {
+          assistantContent += chunk
+        }
 
         // Update the assistant message in the state
         setMessages(prev => {

@@ -18,6 +18,7 @@ function AppContent() {
     <Routes>
       <Route element={<RootLayout onNewChat={startNewChat} />}>
         <Route path="/" element={<Home messages={messages} setMessages={setMessages} />} />
+        <Route path="/chat/:chatId" element={<Home messages={messages} setMessages={setMessages} />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
