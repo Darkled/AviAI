@@ -7,10 +7,6 @@ from app.core.database import Base
 from app.core.middleware import LoggingMiddleware
 from app.routers import health, schema, chat
 
-# Initialize Logfire
-if settings.logfire_token:
-    logfire.configure(token=settings.logfire_token)
-
 app = FastAPI(
     title="AI PostgreSQL Chat API",
     version=settings.app_version,
@@ -19,8 +15,14 @@ app = FastAPI(
 
 app.add_middleware(LoggingMiddleware)
 
-# Instrument FastAPI with Logfire
+# Initialize Logfire
 if settings.logfire_token:
+    logfire.configure(token=settings.logfire_token)
+    # Instrument Pydantic AI for agent tracing
+    logfire.instrument_pydantic_ai()
+    # Instrument HTTPX for deep visibility into API calls
+    logfire.instrument_httpx(capture_all=True)
+    # Instrument FastAPI
     logfire.instrument_fastapi(app)
 
 app.add_middleware(

@@ -1,5 +1,6 @@
 import re
 import httpx
+import logfire
 from dataclasses import dataclass
 from typing import Any
 
@@ -10,6 +11,7 @@ from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core.config import settings
+from app.core.security import validate_sql_query
 from app.services.schema_service import get_database_schema
 
 @dataclass
@@ -61,16 +63,11 @@ async def get_db_schema(ctx: RunContext[Deps]) -> str:
 @agent.tool
 async def execute_sql(ctx: RunContext[Deps], query: str) -> str:
     """Execute a read-only SQL query and return the results as a string."""
-    # Strict check for read-only
-    clean_query = query.strip().upper()
-    if not clean_query.startswith("SELECT"):
-        return "Error: Only SELECT queries are allowed for safety reasons."
-    
-    # Check for forbidden keywords
-    forbidden = ["INSERT", "UPDATE", "DELETE", "DROP", "TRUNCATE", "ALTER", "CREATE"]
-    for word in forbidden:
-        if re.search(rf"\b{word}\b", clean_query):
-            return f"Error: Forbidden keyword '{word}' detected in query."
+    try:
+        # Validate query safety
+        validate_sql_query(query)
+    except ValueError as e:
+        return f"Security Error: {str(e)}"
 
     try:
         result = await ctx.deps.db.execute(text(query))
@@ -86,4 +83,6 @@ async def execute_sql(ctx: RunContext[Deps], query: str) -> str:
         
         return "\n".join(output)
     except Exception as e:
+        # Log the error to Logfire for observability
+        logfire.error("Database Query Failed", query=query, error=str(e))
         return f"Database Error: {str(e)}"

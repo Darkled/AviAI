@@ -7,11 +7,11 @@ type: technical
 priority: medium
 complexity: small
 phase: 4
-status: todo
+status: completed
 labels: [backend, security, logging]
 epic_branch: epic/PRD-001-ai-postgres-chat
 plan: null
-report: null
+report: .agents/reports/PRD-001-ai-postgres-chat/STORY-006-safety-and-observability.report.md
 commit: null
 depends_on: [STORY-004, STORY-005]
 blocks: []
@@ -28,9 +28,9 @@ As an administrator, I want to ensure all AI-generated queries are safe and all 
 
 ## Acceptance Criteria
 
-- [ ] Given any AI-generated SQL, when before execution, then it is validated against a blacklist of destructive commands (DROP, TRUNCATE, etc.).
-- [ ] Given an agent run, when completed, then a full trace is visible in Logfire including model inputs, tool calls, and outputs.
-- [ ] Given a query error, when it occurs, then the error is logged and a user-friendly message is displayed.
+- [x] Given any AI-generated SQL, when before execution, then it is validated against a blacklist of destructive commands (DROP, TRUNCATE, etc.).
+- [x] Given an agent run, when completed, then a full trace is visible in Logfire including model inputs, tool calls, and outputs.
+- [x] Given a query error, when it occurs, then the error is logged and a user-friendly message is displayed.
 
 ## Technical Notes
 
