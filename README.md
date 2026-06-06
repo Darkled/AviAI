@@ -7,7 +7,7 @@ I chose to design this application for **airline fleet management**, enabling op
 ## 📺 Demo
 
 <div align="center">
-  <video src="assets/demo.mp4" width="100%" autoplay loop muted playsinline></video>
+  <video src="https://github.com/Darkled/AviAI/raw/main/assets/demo.mp4" width="100%" autoplay loop muted playsinline></video>
 </div>
 
 ---
